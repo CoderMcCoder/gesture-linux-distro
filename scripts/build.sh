@@ -30,7 +30,7 @@ lb config \
     --archive-areas "main contrib non-free" \
     --bootloader syslinux \
     --binary-images iso-hybrid \
-    --architecture arm64 \
+    --architecture amd64 \
     --cache true \
     --cache-packages true \
     --cache-stages true \
