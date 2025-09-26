@@ -1,0 +1,114 @@
+#!/bin/bash
+
+# Install custom gesture control applications
+# This hook runs inside the chroot environment during build
+
+set -e
+
+echo "Installing gesture control applications..."
+
+# Create application directories
+mkdir -p /usr/local/bin
+mkdir -p /usr/share/gesture-linux
+mkdir -p /etc/xdg/autostart
+mkdir -p /home/user/.config/gesture-linux
+
+# Copy gesture controller
+cp /packages/gesture-controller.py /usr/local/bin/gesture-controller
+chmod +x /usr/local/bin/gesture-controller
+
+# Copy centered launcher
+cp /packages/centered-launcher.py /usr/local/bin/centered-launcher
+chmod +x /usr/local/bin/centered-launcher
+
+# Create desktop entry for gesture controller
+cat > /etc/xdg/autostart/gesture-controller.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=Gesture Controller
+Comment=Hand gesture recognition system
+Exec=/usr/local/bin/gesture-controller
+Icon=preferences-desktop-accessibility
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
+
+# Create desktop entry for centered launcher
+cat > /etc/xdg/autostart/centered-launcher.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=Centered Launcher
+Comment=Minimalist app launcher
+Exec=/usr/local/bin/centered-launcher
+Icon=applications-other
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
+
+# Create default configuration
+cat > /home/user/.config/gesture-linux/config.json << EOF
+{
+    "custom_commands": {
+        "swipe_left": "xdotool key Alt+Left",
+        "swipe_right": "xdotool key Alt+Right",
+        "swipe_up": "xdotool key Alt+Up",
+        "swipe_down": "xdotool key Alt+Down",
+        "pinch": "xdotool key Escape",
+        "fist": "xdotool key Return",
+        "peace": "xdotool key Tab",
+        "thumbs_up": "xdotool key Ctrl+t",
+        "thumbs_down": "xdotool key Ctrl+w"
+    },
+    "gesture_threshold": 0.8,
+    "gesture_cooldown": 1.0
+}
+EOF
+
+# Create default apps configuration
+cat > /home/user/.config/gesture-linux/apps.json << EOF
+[
+    {
+        "name": "Web Browser",
+        "command": "firefox",
+        "icon": "🌐",
+        "description": "Browse the internet"
+    },
+    {
+        "name": "File Manager",
+        "command": "thunar",
+        "icon": "📁",
+        "description": "Manage files and folders"
+    },
+    {
+        "name": "Text Editor",
+        "command": "geany",
+        "icon": "📝",
+        "description": "Edit text files"
+    },
+    {
+        "name": "Terminal",
+        "command": "xterm",
+        "icon": "💻",
+        "description": "Command line interface"
+    },
+    {
+        "name": "Settings",
+        "command": "lxappearance",
+        "icon": "⚙️",
+        "description": "System settings"
+    },
+    {
+        "name": "System Monitor",
+        "command": "htop",
+        "icon": "📊",
+        "description": "Monitor system resources"
+    }
+]
+EOF
+
+# Set proper permissions
+chown -R user:user /home/user/.config/gesture-linux
+
+echo "Gesture control applications installed successfully!"
