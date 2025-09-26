@@ -39,10 +39,7 @@ lb config \
     --iso-application "Gesture Linux Distribution" \
     --iso-preparer "Gesture Linux Team" \
     --iso-publisher "Gesture Linux Team" \
-    --iso-volume "Gesture Linux" \
-    --packages-lists "gesture-linux" \
-    --hooks "0100-install-gesture-apps" \
-    --includes "etc/openbox/rc.xml"
+    --iso-volume "Gesture Linux"
 
 # Copy custom packages to build directory
 echo "📦 Copying custom packages..."
